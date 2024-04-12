@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>위시리스트</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+    <div th:replace="@{/fragments/header}"></div>
+    <div class="body">
+		<div class="class-container">
+			<div th:if="${#lists.isEmpty(onedayList) or allWishedStatusFalse}">
+			    <p>위시리스트가 비어있습니다.</p>
+			</div>
+            <div th:unless="${#lists.isEmpty(onedayList)} and !allWishedStatusFalse" class="class-list">
+                <div class="class-item" th:each="oneday, status : ${onedayList}" th:if="${wishedStatusList[__${status.index}__]}">
+					<a th:href="@{/board/detail/{onedayId}(onedayId=${oneday.id})}">
+						<div class="img">
+							<img th:src="@{/oneday/image(id=${oneday.id})}" alt="${oneday.name}">
+						</div>
+	                    <span id="wishlist">
+	                        <p th:text="${oneday.category.name}" id="category"></p>
+	                        <div class="wrapper">
+	                            <!-- 아이콘에 필요한 데이터를 data 속성으로 추가 -->
+	                            <div class="icon-wishlist"
+	                                data-th-onedayid="${oneday.id}"
+	                                th:class="${wishedStatusList[__${status.index}__]} ? 'icon-wishlist in-wishlist' : 'icon-wishlist'">
+	                            </div>
+	                            <!-- hidden input 추가 -->
+	                            <input type="hidden" th:value="${oneday.id}" id="onedayId" />
+	                        </div>
+	                    </span>
+	                    <p th:text="${oneday.name}" id="title"></p>
+	                    <div class="location">
+							<p id="location"><img th:src="@{/img/marker.svg}"> [[${oneday.location}]]</p>
+						</div>
+	                    
+					    <div class="between">
+						    <div class="star-ratings" th:data-rating="${oneday.averageRate}">
+								<div class="star">
+							        <div class="star-ratings-fill space-x-2 text-lg" id="rating-fill">
+							            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							        </div>
+							        <div class="star-ratings-base space-x-2 text-lg" id="rating-base">
+							            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							        </div>
+						        </div>
+						    </div>
+						    <span class="average-rate">[[${oneday.averageRate}]]</span>
+					    </div>
+				    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="message-container" id="messageContainer">
+        <p id="messageText"></p>
+        <button class="btn btn-primary" id="closeButton">닫기</button>
+    </div>
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="/bootstrap/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.icon-wishlist').on('click', function () {
+				// 앵커 태그의 기본 동작을 막습니다.
+   				event.preventDefault();
+                $(this).toggleClass('in-wishlist');
+
+                // 클릭된 아이콘의 부모 클래스 항목에서 onedayId 읽기
+                let onedayId = parseInt($(this).closest('.class-item').find('[id^=onedayId]').val());
+                let isWishlist = $(this).hasClass('in-wishlist');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/wishlist/update',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        onedayId: onedayId,
+                        isWishlist: isWishlist
+                    }),
+                    success: function (response) {
+                        console.log('Wishlist updated successfully:', response);
+                        showMessageAndReload('위시리스트에서 삭제 되었습니다.');
+                    },
+                    error: function (error) {
+                        console.error('Error updating wishlist:', error);
+                        showMessageAndReload('위시리스트 삭제 실패했습니다.');
+                    },
+                    dataFilter: function (data) {
+                        console.log('Sending data:', { onedayId, isWishlist });
+                        return data;
+                    }
+                });
+            });
+
+            // 닫기 버튼 클릭 이벤트 처리
+            $('#closeButton').on('click', function () {
+                location.reload();
+            });
+
+            // 메시지를 표시하고 페이지를 새로고침하는 함수
+            function showMessageAndReload(message) {
+                $('#messageText').text(message);
+                $('#messageContainer').show();
+                setTimeout(function () {
+                    hideMessage();
+                    location.reload();
+                }, 2000); // 2초 후에 메시지를 숨기고 페이지를 새로고침합니다.
+            }
+
+            // 메시지를 숨기는 함수
+            function hideMessage() {
+                $('#messageContainer').hide();
+            }
+            
+            $('#categoryBtn').on('click', function () {
+	        // 카테고리 컨테이너를 토글
+	        $('.category-container').toggle();
+	        
+	        // 지역 컨테이너가 열려있으면 닫음
+	        $('.region-container').hide();
+		    });
+		
+		    $('#regionBtn').on('click', function () {
+		        // 지역 컨테이너를 토글
+		        $('.region-container').toggle();
+		        
+		        // 카테고리 컨테이너가 열려있으면 닫음
+		        $('.category-container').hide();
+		    });
+	    });
+    </script>
+</body>
+
+</html>

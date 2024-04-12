@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의 등록</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/question_list.css}" />
+</head>
+<body>
+	<div class="body-container">
+	    <div class="body-box">
+			<div class="body-menu">
+				<div class="logo-img"><a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a></div><br>
+				<div class="menu"><img class="icon" th:src="@{/img/home.svg}"><a th:href="@{/main}">HOME</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/admin.svg}"><a th:href="@{/auth/approval}">관리자 가입 승인</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/people.svg}"><a th:href="@{/auth/management}">전체 회원 관리</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/open.svg}"><a th:href="@{/board/myclassAdmin}">나의 오픈 클래스</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/reservation.svg}"><a th:href="@{/board/myclassUser}">내가 신청한 클래스</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/question2.svg}"><a th:href="@{/question/register}">문의글 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/question.svg}"><a th:href="@{/question/list}">내가 작성한 문의</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/review.svg}"><a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}">내 리뷰 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/user.svg}"><a th:href="@{/auth/updateProfile}">내 정보 수정</a></div>
+			</div>	
+			<div class="table-container">
+				<div class="user">
+					<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+					    	[[${user.nickname}]]님
+					    </a>
+						<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+							<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+						</ul>
+				        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+					        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+							<li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+					        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+				        </ul>
+					</div>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+		        </div>
+				<div class="table-box">
+					<h2>문의 등록</h2><br>
+					<div class="container">
+				        <form th:object="${question}" th:action="@{/question/add}" method="post">
+				            <div class="mb-3">
+				                <label for="onedayName" class="form-label">클래스 제목</label>
+				                <!-- 클래스 제목을 수정할 수 없도록 disabled 속성 추가 -->
+				                <input type="text" class="form-control" id="onedayName" name="onedayName" th:value="${oneday.name}" disabled>
+				                <!-- onedayId 값도 필요하므로 type="hidden"으로 전송 -->
+				                <input type="hidden" name="onedayId" th:value="${oneday.id}">
+				            </div>
+				            <div class="mb-3">
+				                <label for="question_title" class="form-label">질문 제목</label>
+				                <input type="text" class="form-control" id="question_title" name="question_title" required>
+				            </div>
+				            <div class="mb-3">
+				                <label for="question_content" class="form-label">질문 내용</label>
+				                <textarea class="form-control" id="question_content" name="question_content" rows="4" required></textarea>
+				            </div>
+				
+				            <input type="hidden" name="id" th:value="${question.id}" />
+				            <button type="submit" class="btn btn-primary">수정 완료</button>
+				        </form>
+				    </div>
+				</div>
+			</div>	
+		</div>
+	</div>
+    
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
+</body>
+</html>

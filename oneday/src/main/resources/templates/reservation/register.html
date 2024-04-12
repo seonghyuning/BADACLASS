@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<title>예약 회원 관리</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/question_list.css}" />
+</head>
+<body>
+    <div class="body-container">
+	    <div class="body-box">
+			<div class="body-menu">
+				<div class="logo-img"><a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a></div><br>
+				<div class="menu"><img class="icon" th:src="@{/img/home.svg}"><a th:href="@{/main}">HOME</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/admin.svg}"><a th:href="@{/auth/approval}">관리자 가입 승인</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/people.svg}"><a th:href="@{/auth/management}">전체 회원 관리</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/open.svg}"><a th:href="@{/board/myclassAdmin}">나의 오픈 클래스</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/reservation.svg}"><a th:href="@{/board/myclassUser}">내가 신청한 클래스</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/question2.svg}"><a th:href="@{/question/register}">문의글 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/question.svg}"><a th:href="@{/question/list}">내가 작성한 문의</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/review.svg}"><a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}">내 리뷰 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/user.svg}"><a th:href="@{/auth/updateProfile}">내 정보 수정</a></div>
+			</div>	
+			<div class="table-container">
+				<div class="user">
+					<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+					    	[[${user.nickname}]]님
+					    </a>
+						<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+							<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+						</ul>
+				        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+					        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+					        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+				        </ul>
+					</div>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+		        </div>
+				<div class="table-box">
+					<h3>예약 회원관리</h3>
+					<p>[[${oneday.name}]]</p>
+				    <table>
+				        <thead>
+				            <tr>
+				                <th>회원 이름</th>
+				                <th>신청 날짜</th>
+				                <th>인원수</th>
+				                <th>휴대폰 번호</th>
+				                <th>이메일</th>
+				                <th>예약 취소</th>
+				            </tr>
+				        </thead>
+				        <tbody th:if="${#strings.isEmpty(reservationList)}">
+				            <tr>
+				                <td>
+				                    <p>
+				                        <b><span style="font-size: 9pt">예약된 회원이 없습니다.</span></b>
+				                    </p>
+				                </td>
+				            </tr>
+				        </tbody>
+				        <tbody th:unless="${#strings.isEmpty(reservationList)}">
+				            <!-- reservationList 값이 하나씩 꺼내져서 reservation에 넣어짐 -->
+				            <tr th:each="reservation:${reservationList}">
+				                <!-- 내장된 변수 reservationStat.count -->
+				                <!-- thymeleaf에서 변수를 사용할 때는 []로 묶어줘야 함 -->
+				                <td>[[${reservation.user.nickname}]]</td>
+				                <td th:text="${#temporals.format(reservation.date, 'yyyy-MM-dd')}"></td>
+				                <td>[[${reservation.count}]]</a></td>
+				                <td>[[${reservation.user.phoneNm}]]</td>
+				                <td>[[${reservation.user.email}]]</td>
+				                <td>
+				                    <form th:action="@{/reservation/delete}" method="post">
+				                        <!-- onedayId와 reservationId값도 필요하므로 type="hidden" 으로 값 넘겨주기 -->
+				                        <input type="hidden" name="onedayId" th:value="${reservation.oneday.id}">
+				                        <input type="hidden" name="reservationId" th:value="${reservation.id}">
+				                        <th:block th:with="today=${T(java.time.LocalDateTime).now()}">
+					                        <input th:if="${reservation.date.isAfter(today)}" type="submit" value="취소하기" class="btn btn-outline-dark" onclick="return confirm('정말로 취소하시겠습니까?')">
+					                        <input th:if="${reservation.date.isBefore(today)}" type="submit" value="취소불가" class="btn btn-outline-dark" onclick="return confirm('정말로 취소하시겠습니까?')" th:attr="disabled=${reservation.date.isBefore(today)}">
+						                </th:block>
+				                    </form>
+				                </td>
+				            </tr>
+				        </tbody>
+				    </table>
+				</div>
+			</div>	
+		</div>
+	</div>
+    
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="/js/category.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

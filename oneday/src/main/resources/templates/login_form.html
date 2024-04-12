@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+	<link rel="stylesheet" th:href="@{/css/login.css}"/>
+</head>
+<body>
+	<div class="login-box">
+		<div class="container">
+			<div class="img-box">
+				<img th:src="@{/img/login.png}" class="login-img">
+			</div>
+			<div class="login-wrapper">
+				<div class="login-container">
+					<img th:src="@{/img/logo2.png}" class="logo-img">
+					<h2>Welcome to BADA Class</h2>
+					<form th:action="@{/auth/login}" name="loginForm" method="post" id="login-form">
+				        <!-- 시큐리티의 로그인이 실패할 경우에는 로그인 페이지로 다시 리다이렉트된다. 이때 페이지 파라미터로 error가 함께 전달 -->
+				        <!-- 로그인 페이지의 파라미터로 error가 전달될 경우 "사용자 ID 또는 비밀번호를 확인해주세요." 라는 오류메시지를 출력 -->
+				        <div th:if="${param.error}" align="center">
+							<script>
+								alert('사용자 ID 또는 비밀번호를 확인해주세요.');
+							</script>
+			        	</div>
+			        	<div class="login-input">
+							<input type="text" name="username" id="username" placeholder="ID">
+							<input type="password" name="password" id="password" placeholder="Password">
+						</div>
+						<div class="find">
+				            <a class="atag" th:href="@{/auth/findId}">ID 찾기</a><a> | </a>
+				            <a class="atag" th:href="@{/auth/findPw}">비밀번호 찾기</a><br>
+				            <a class="atag" th:href="@{/auth/join}">아직 회원이 아닌가요? <strong>회원가입</strong></a>
+				        </div>
+						<button type="submit">Log In</button>
+			    	</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+	<link rel="stylesheet" th:href="@{/css/menu.css}" />
+</head>
+<body>
+    <div class="header-container">
+		<div class="header-box">
+	        <div>
+	            <a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a>
+	            <div class="search">
+					<form th:action="@{/board/search}" method="get" id="search">
+		                <input type="text" id="oneday_name" name="keyword" placeholder="다양한 클래스를 찾아보세요!">
+		                <div class="search_icon">
+							<img th:src="@{/img/search.svg}">
+						</div>
+		                <button type="submit"></button>
+		            </form>
+				</div>
+	        </div>
+	        <div class="user">
+				<button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" onclick="writeOnedayClass()" class="btn1">클래스 등록</button>
+				<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+					<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+				    	[[${user.nickname}]]님
+				    </a>
+					<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+						<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+					</ul>
+			        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+				        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+				        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+				        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+				        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+						<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+				        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+			        </ul>
+				</div>
+	            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+	            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+	        </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/js/category.js"></script>
+  </body>
+</html>

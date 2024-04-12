@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <link rel="stylesheet" th:href="@{/css/join.css}" />
+</head>
+<body>
+	<div class="profile-update">
+		<div class="profile-container">
+			<div>
+				<p id="role" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}">대표</p>
+				<p id="role" th:unless="${#authentication.getPrincipal().getUsername().equals('admin')}">[[${user.role}]]</p>
+				<h2>프로필 수정</h2>
+			</div>
+		    <form th:action="@{/auth/updateProfile}" method="post" id="profile-form" enctype="multipart/form-data">
+				<label for="profile_image">프로필 사진<br>
+					<img id="profileImage" th:if="${user.image == null}" th:src="@{/img/defaultProfileImage.png}" width="100px" height="100px" alt="프로필 사진">
+					<img id="profileImage" th:unless="${user.image == null}" th:src="@{/user/image(id=${user.id})}" width="100px" height="100px" alt="프로필 사진">
+                    <input type="file" id="file" name="file" accept="image/*" onchange="previewImage(this)"><br>
+                    <div id="imageContainer"></div><br>
+                    <p th:if="${user.image != null}">▼ 교체할 프로필 사진</p>
+                    <p th:unless="${user.image != null}">▼ 업로드할 프로필 사진</p><br>
+                    <img id="imagePreview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+                    <br th:if="${user.image != null}">
+				</label>
+		        <label for="nickname">* 이름<br>
+					<input type="text" id="nickname" name="nickname" th:value="${user.nickname}" required><br><br>
+				</label>
+				<label for="username">* ID<br>
+					<input type="text" id="username" name="username" th:value="${user.username}" class="disabled-input" disabled><br><br>
+                </label>
+				<label for="gender">* 성별<br>
+					<input type="text" id="gender" name="gender" th:value="${user.gender}" class="disabled-input" disabled><br><br>
+                </label>
+				<label for="username">* 생년월일<br>
+					<input type="text" id="year" name="year" th:value="${user.year}" class="disabled-input" disabled><br><br>
+                </label>
+				<label for="phoneNm">* 휴대폰 번호<br>
+					<input type="text" id="phoneNm" name="phoneNm" th:value="${user.phoneNm}" placeholder="01012341234" required><br><br>
+				</label>
+				<label for="email">* Email<br>
+					<input type="email" id="email" name="email" th:value="${user.email}" placeholder="1234@naver.com" required><br><br>
+		        </label>
+		        <div class="btn">
+			        <button type="submit">변경 완료</button>
+			        <button type="button" id="goBackButton">이전으로</button>
+		        </div>
+		    </form>
+		</div>
+	</div>
+	<script type="text/javascript" src="/js/goBack.js"></script>
+	<script type="text/javascript" src="/js/writeClass.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+*{
+    border: none;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+html {
+    background: linear-gradient(to bottom right, #6d71c4, #b2bddc);
+}
+.find-box{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 450px;
+    padding: 50px;
+   	background-color: white;
+    box-sizing: border-box;
+    border-radius: 30px;
+}
+
+.findPw-box{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 500px;
+    padding: 50px;
+    box-sizing: border-box;
+    border-radius: 30px;
+    background-color: white;
+}
+
+.find_result-box{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 550px;
+    height: 350px;
+    padding: 50px;
+    box-sizing: border-box;
+    border-radius: 30px;
+    background-color: white;
+}
+
+h2{
+	text-align: center;
+    font-size: 25px;
+    font-weight: 900;
+    color: rgb(71, 77, 175);
+    margin-bottom: 20px;
+}
+input{
+    width: 100%;
+    height: 60px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    background-color: rgb(240, 241, 249);
+    border-bottom: 1px solid rgb(109, 113, 196);
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+input::placeholder{
+    color: rgb(109, 113, 196);
+    font-size: 18px;
+}
+button{
+	width: 100%;
+	height: 50px;
+    color: white;
+    font-size: 20px;
+    background-color: rgb(109, 113, 196);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.additional-links {
+	display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.additional-links > a{
+	font-size: 16px;
+	color: rgb(69, 74, 171);
+}
+
+#login{
+	width: 150px;
+	height: 50px;
+    color: rgb(109, 113, 196);;
+    font-size: 20px;
+    background-color: white;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 1px solid rgb(58, 63, 143);
+    border-radius: 8px;
+}
+
+#psfind {
+	width: 150px;
+	height: 50px;
+    color: white;
+    font-size: 20px;
+    background-color: rgb(109, 113, 196);
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.button {
+	display: flex;
+    justify-content: space-around;
+}
+
+
+div > p {
+	margin-top: 50px;
+	margin-bottom: 40px;
+	font-size: 20px;
+}
+
+.join-wrapper > a {
+	text-align: center;
+	color: rgb(67, 72, 167);
+}
+
+.btn {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn button {
+    margin-right: 10px;
+}

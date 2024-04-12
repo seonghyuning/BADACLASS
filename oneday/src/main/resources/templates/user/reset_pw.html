@@ -1,0 +1,26 @@
+<!-- reset_pw.html (비밀번호 재설정 화면) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 재설정</title>
+	<link rel="stylesheet" th:href="@{/css/find.css}" />
+</head>
+<body>
+	<div class="find-box">
+		<div class="find-wrapper">
+			<h2>비밀번호를 재설정 해주세요</h2>
+		    <form th:action="@{/auth/resetPw}" method="post" id="Pwreset-form"> 
+		        <input type="password" id="password1" name="password1" placeholder="새로운 비밀번호"  required>
+		        <input type="password" id="password2" name="password2" placeholder="새로운 비밀번호 확인" required>
+		        <div class="btn">
+			        <button type="submit">비밀번호 재설정</button>
+			        <button type="button" id="goBackButton">이전으로</button>
+		        </div>
+		    </form>
+		</div>
+	</div>
+	<script th:src="@{/js/errorPupup.js}" defer="defer"></script>
+	<script type="text/javascript" src="/js/goBack.js"></script>
+</body>
+</html>

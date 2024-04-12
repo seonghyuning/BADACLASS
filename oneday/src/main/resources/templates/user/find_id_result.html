@@ -1,0 +1,30 @@
+<!-- find_id_result.html (ID 찾기 결과 화면) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ID 찾기 결과</title>
+    <link rel="stylesheet" th:href="@{/css/find.css}" />
+</head>
+<body>
+	<div class="find_result-box">
+		<div class="findId-wrapper">
+			<h2>회원님의 아이디를 확인해주세요</h2>
+		    <div th:if="${username}">
+		        <p th:text="'회원님의 아이디는: ' + ${username}+' 입니다.'"></p>
+		    </div>
+		    <div th:if="${error}">
+		        <p th:text="${error}"></p>
+		    </div>
+		    <div class="button">
+				<a th:href="@{/auth/login}">
+                <button type="button" id="login">로그인</button>
+	            </a>
+	            <a th:href="@{/auth/findPw}">
+	                <button type="button" id="psfind">비밀번호 찾기</button>
+	            </a>
+			</div>      
+		</div>
+	</div>
+</body>
+</html>

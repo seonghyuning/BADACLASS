@@ -1,0 +1,201 @@
+.detail-box > p {
+	margin-top:5px;
+	margin-right: 5%;
+	text-align: right;
+}
+
+.detail-wrapper{
+    padding: 0% 15% 0 15%;
+}
+.reservation{
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 20px
+}
+
+.detail {
+    border-top: 1px solid #adb5bd;
+    border-bottom: 1px solid #adb5bd;
+}
+.h111 > h5{
+	margin: 3% 0 3% 0;
+	width: fit-content;
+    background: linear-gradient(to bottom, #FFFFFF 60%, #f1d2d6 50%);
+}
+
+.h112{
+	color: #515B60;
+}
+
+a > img{
+	width: 20px;
+	height: 20px;
+	margin: auto;
+}
+
+#calendar .saturday {
+    color: rgb(104, 104, 255); /* 토요일 텍스트 색상을 원하는 색상으로 변경하세요 */
+}
+
+#calendar .sunday {
+    color: rgb(255, 128, 128); /* 일요일 텍스트 색상을 원하는 색상으로 변경하세요 */
+}
+
+#calendar .past-date {
+    color: #ccc; /* 이전 날짜는 회색으로 표시 */
+    text-decoration: line-through; /* 짝대기 표시를 위한 속성 추가 */
+    pointer-events: none; /* 클릭 이벤트 비활성화 */
+}
+#calendar .inactive-date {
+    pointer-events: none;
+    color: #ccc;
+}
+
+.clickable.fully-booked{
+	color: #ccc;
+    text-decoration: line-through; /* 짝대기 표시를 위한 속성 추가 */
+    pointer-events: none; /* 클릭 이벤트 비활성화 */
+}
+
+a#atag {
+    border: 1px solid;
+    width: fit-content;
+}
+#calendar .selected {
+	border-radius: 50px;
+    background-color: rgb(154 150 150);
+    color: #fff;
+}
+
+.reservation {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px; /* 조정 가능한 여백 값 */
+}
+
+.calendar {
+	width: 350px;
+    margin-top: 20px; /* 조정 가능한 여백 값 */
+    border-radius: 10px;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid #CED4DA;
+    padding: 19px;
+    max-width: 400px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 5px 8px 0px, rgba(0, 0, 0, 0.12) 0px 1px 14px 0px;
+}
+
+.calendar-box {
+    border: 1px solid lightgray;
+    padding: 3%;
+    margin: 10px 0 15px 0;
+}
+
+.month{
+	margin-top: 3%;
+	display: flex;
+    justify-content: center;
+    padding: 5%;
+}
+
+.calendar-title {
+    border: 1px solid lightgray;
+    width: fit-content;
+    margin: auto;
+	padding: 4px 15px;
+    font-size: 18px;
+}
+
+strong#calendarTitle {
+	font-size: 18px;
+	margin: auto;
+}
+table#calendar {
+    width: 100%;
+    height: 300px;
+    margin-top: 10px; /* 조정 가능한 여백 값 */
+    font-size: 14px;
+    color: #5a5858;
+}
+
+th#calendar {
+    padding: 8px;
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+td#calendar {
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#calendar td:hover {
+    background-color: #e6e6e6;
+    border-radius: 50px;
+}
+
+form#reservationForm {
+    display: flex;
+    justify-content: center;
+}
+
+input#count {
+    font-size: 15px;
+    margin-right: 3%;
+    width: 175px;
+    height: 37px;
+}
+#reservationForm > input::placeholder{
+	font-size: 12px;
+}
+
+.title > img {
+    width: 450px; /* 이미지를 부모 요소에 꽉 차게 설정 */
+    height: 450px; /* 가로 비율 유지 */
+    margin-bottom: 20px; /* 조정 가능한 여백 값 */
+}
+
+h4 {
+    margin-bottom: 20px; /* 조정 가능한 여백 값 */
+}
+
+p#category {
+    border: 2px solid #bc656f;
+    border-radius: 10px;
+    background-color: #f9f1f2;
+    color: #bc656f;
+    font-weight: 600;
+    width: fit-content;
+    padding: 0.5%;
+    margin-bottom: 20px; /* 조정 가능한 여백 값 */
+}
+.button{
+	margin:auto;
+}
+
+.h113 {
+    display: flex;
+    justify-content: space-around;
+}
+
+.h113 > button {
+    border: none;
+    background-color: white;
+    font-size: 16px; /* 조정 가능한 폰트 크기 */
+    cursor: pointer;
+}
+
+.h113 > button:hover {
+    font-weight: bold;
+}
+#map{
+	width:100%;
+	height:350px; 
+	margin: auto;
+	margin: 5% 0 5% 0;
+}
+
+.button-spacing {
+	margin-right: 5px;
+}

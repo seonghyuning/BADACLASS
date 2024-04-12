@@ -1,0 +1,121 @@
+a {
+	text-decoration: none;
+	color: black;
+}
+.footer-container{
+	display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2%;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0px auto;
+    padding: 2%
+}
+
+.app{
+	display: flex;
+    flex-direction: column;
+}
+.app > .footer-title {
+	font-size: 22px;
+    font-weight: bold;
+}
+.app > .footer-content{
+    font-size: 11px;
+    white-space: nowrap;
+}
+.install{
+	display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+}
+
+.install > a{
+	display: flex;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 4px;
+    width: calc((100% - 8px) / 2);
+    padding: 8px 16px;
+    border: 1px solid rgb(206, 212, 218);
+    border-radius: 5px;
+    text-align: center;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.list{
+	display: flex;
+    justify-content: space-between;
+}
+ul{
+	display: flex;
+    justify-content: space-evenly;
+    gap: 4%;
+}
+ul.list2 {
+    display: flex;
+    justify-content: space-between;
+    width: 130px;
+}
+
+.list1 >li{
+	display: flex;
+	margin-right: 3%;
+}
+
+list > .list2{
+	display: flex;
+    flex-direction: row;
+    gap: 16px;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.list2 > li {
+	display: flex;
+	justify-content: space-around;
+}
+
+li > a{
+	white-space: nowrap;
+    font-size: 12px;
+    text-decoration: none;
+    display: flex;
+}
+
+.content > p{
+	font-size: 11px;
+    color: rgb(143, 147, 158);
+}
+
+.question > p{
+	font-size: 15px;
+}
+
+.question > a{
+	padding: 8px 16px;
+    border: 1px solid rgb(206, 212, 218);
+    border-radius: 5px;
+    font-size: 13px;
+    text-decoration: none;
+    text-align: center;
+}
+.question > .time {
+	min-width: fit-content;
+    white-space: nowrap;
+    color: rgb(143, 147, 158);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+#footer-img{
+	width: 18px;
+    height: 18px;
+}

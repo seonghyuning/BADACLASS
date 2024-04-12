@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>내가 작성한 리뷰</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/review.css}">
+    <link rel="stylesheet" th:href="@{/css/question_list.css}" />
+</head>
+<body>
+    <div class="body-container">
+	    <div class="body-box">
+			<div class="body-menu">
+				<div class="logo-img"><a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a></div><br>
+				<div class="menu"><img class="icon" th:src="@{/img/home.svg}"><a th:href="@{/main}">HOME</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/admin.svg}"><a th:href="@{/auth/approval}">관리자 가입 승인</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/people.svg}"><a th:href="@{/auth/management}">전체 회원 관리</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/open.svg}"><a th:href="@{/board/myclassAdmin}">나의 오픈 클래스</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/reservation.svg}"><a th:href="@{/board/myclassUser}">내가 신청한 클래스</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/question2.svg}"><a th:href="@{/question/register}">문의글 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/question.svg}"><a th:href="@{/question/list}">내가 작성한 문의</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/review.svg}"><a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}">내 리뷰 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/user.svg}"><a th:href="@{/auth/updateProfile}">내 정보 수정</a></div>
+			</div>	
+			<div class="table-container">
+				<div class="user">
+					<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+					    	[[${user.nickname}]]님
+					    </a>
+						<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+							<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+						</ul>
+				        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+					        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+					        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+				        </ul>
+					</div>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+		        </div>
+				<div class="table-box">
+					<h4>[[${user.nickname}]]님이 작성하신 리뷰</h4>
+				    <div class="review-container">
+					    <div th:if="${#strings.isEmpty(reviewList)}">
+					        <p>작성한 리뷰가 존재하지 않습니다.</p>
+					    </div>
+					    <div th:unless="${#strings.isEmpty(reviewList)}">
+						    <div th:each="review:${reviewList}" class="reviewList">
+								<img id="profileImage" th:if="${review.user.image == null}" th:src="@{/img/defaultProfileImage.png}" width="40px" height="40px" alt="프로필 사진">
+								<img id="profileImage" th:unless="${review.user.image == null}" th:src="@{/user/image(id=${review.user.id})}" width="40px" height="40px" alt="프로필 사진">
+						        <label>[[${review.user.nickname}]]</label>
+						        <label>
+							        <div class="star-ratings" th:data-rating="${review.rate}">
+							            <div class="star-ratings-fill space-x-2 text-lg" id="rating">
+							                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							            </div>
+							            <div class="star-ratings-base space-x-2 text-lg" id="rating">
+							                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							            </div>
+							        </div>
+						        </label>
+						        <label>[[${#temporals.format(review.date, 'yyyy-MM-dd HH:mm:ss')}]]</label>
+						        <a id="updateReview" class="update" th:if="${#authentication.getPrincipal().getUsername() == review.user.username}" 
+					     			th:href="@{/review/update(reviewId=${review.id})}">수정</a> 
+					     		<a class="delete" th:if="${#authentication.getPrincipal().getUsername() == review.user.username ||
+					     			#authentication.getPrincipal().getUsername().equals('admin')}" onclick="return confirm('정말로 삭제하시겠습니까?')"
+					     			th:href="@{/review/removeFromMyreview(reviewId=${review.id})}">삭제</a><br>
+					     		<a id="onedayName" th:href="@{/board/detail/{onedayId}(onedayId=${review.oneday.id})}">[[${review.oneday.name}]]></a>
+					     		<br th:if="${review.image != null}">
+						        <img th:if="${review.image != null}" th:src="@{/review/image(id=${review.id})}" style="max-width: 30%; max-height: 30%;" alt="리뷰 이미지"><br>
+						        <br th:if="${review.image != null}">
+						        <p>[[${review.comment}]]</p>
+						        <hr th:if="${reviewStat.count != #lists.size(reviewList)}">
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+    
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>

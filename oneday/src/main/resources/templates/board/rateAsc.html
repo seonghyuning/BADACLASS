@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>원데이 클래스 예약 페이지</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <link rel="stylesheet" th:href="@{/css/review.css}">
+</head>
+<body>
+    <div th:replace="@{/fragments/header}"></div>
+    <div class="detail-box">
+        <p th:text="조회수 + ' ' + ${oneday.view}"></p>
+        <div class="detail-wrapper">
+            <div class="reservation">
+                <div class="title">
+	               <span style="display: flex;">
+	                  <p th:text="${oneday.category.name}" id="category"> </p>
+	                       <h4 th:text="${oneday.name}"></h4>
+	               </span>
+                    <img th:src="@{/oneday/image(id=${oneday.id})}" alt="${oneday.name}" width="500px" height="500px">
+                </div>
+                <div class="calendar">
+					<div class="calendar-title">
+							<a id="onedayid" data-th-onedayid="${oneday.id}">클래스 일정</a>
+					</div>
+					<div class="calendar-box">
+	                    <input type="hidden" name="onedayId" th:value="${onedayId}">
+	                    <div class="month">
+	                        <a type="button" onclick="prevMonth()"><img th:src="@{/img/left.svg}"></a>
+	                        <strong id="calendarTitle"></strong>
+	                        <a type="button" onclick="nextMonth()"><img th:src="@{/img/right.svg}"></a>
+	                    </div>
+	                    <table id="calendar"></table>	         
+					</div>
+					<form th:action="@{'/performReservation/' + onedayId}" id="reservationForm" method="post" enctype="multipart/form-data">
+                        <input type="number" id="count" name="count" required placeholder="인원 수를 입력하세요"><br>
+                        
+                        <input type="hidden" id="selectedDate" name="selectedDate" th:value="${#dates.format(selectedDate, 'yyyy-MM-dd')}">
+                        <!-- onedayId를 hidden으로 전달 -->
+                        <input type="hidden" name="onedayId" th:value="${onedayId}">
+                        <!-- 예약 버튼에 onclick 이벤트 추가 -->
+                        <button type="button" class="btn btn-outline-dark button-spacing" onclick="validateReservation()">예약</button>
+                        <a th:href="@{/question/form2(onedayId=${onedayId})}" class="btn btn-outline-dark button-spacing">문의</a>
+                    </form>
+                </div>
+            </div>
+          <div class="detail">
+            <div class="button">
+				<div class="h113">
+	               <button type="button" id="content">클래스 소개</button>
+	               <button type="button" id="curri">커리큘럼</button>
+	               <button type="button" id="location">위치</button>
+	               <button type="button" id="review">리뷰</button>
+	        	</div>
+            </div>
+            <hr/>
+             <div class="content" style="height: 500px;"><div class="h111"><h5>클래스 소개</h5></div><br>[[${oneday.content}]]</div>
+             <div class="curri" style="height: 500px;"><div class="h111"><h5>커리큘럼</h5></div>[[${oneday.curri}]]</div>
+             <div class="location">
+				 <div class="h111">
+					 <h5>위치</h5><br>
+				 		<p class="h112" th:text="${oneday.location}"></p>
+				 </div>
+				 <div id="map"></div>
+			 </div> 
+             <div class="review">
+               <form th:action="@{/board/detail/{onedayId}(onedayId=${onedayId})}" id="reviewForm" method="post" enctype="multipart/form-data">
+                    <table align="center" border="1">
+                        <tr>
+                            <td colspan="3" sec:authorize="isAuthenticated()" th:if="${user}">
+                                <!-- onedayId값도 필요하므로 type="hidden"으로 전송 -->
+                                <input type="hidden" name="onedayId" th:value="${onedayId}">  
+                      			<div id="star">
+	                                <div th:if="${reviewable} == true" class="star-rating space-x-4 mx-auto">
+	                                    <input type="radio" id="5-stars" name="rate" value="5" v-model="ratings"/>
+	                                    <label for="5-stars" class="star pr-4">★</label>
+	                                    <input type="radio" id="4-stars" name="rate" value="4" v-model="ratings"/>
+	                                    <label for="4-stars" class="star">★</label>
+	                                    <input type="radio" id="3-stars" name="rate" value="3" v-model="ratings"/>
+	                                    <label for="3-stars" class="star">★</label>
+	                                    <input type="radio" id="2-stars" name="rate" value="2" v-model="ratings"/>
+	                                    <label for="2-stars" class="star">★</label>
+	                                    <input type="radio" id="1-star" name="rate" value="1" v-model="ratings" />
+	                                    <label for="1-star" class="star">★</label>
+	                                </div>
+	                                <div th:unless="${reviewable} == true" class="star-rating space-x-4 mx-auto">
+	                                    <input type="radio" id="5-stars" name="rate" value="5" v-model="ratings" disabled/>
+	                                    <label for="5-stars" class="star pr-4">★</label>
+	                                    <input type="radio" id="4-stars" name="rate" value="4" v-model="ratings" disabled/>
+	                                    <label for="4-stars" class="star">★</label>
+	                                    <input type="radio" id="3-stars" name="rate" value="3" v-model="ratings" disabled/>
+	                                    <label for="3-stars" class="star">★</label>
+	                                    <input type="radio" id="2-stars" name="rate" value="2" v-model="ratings" disabled/>
+	                                    <label for="2-stars" class="star">★</label>
+	                                    <input type="radio" id="1-star" name="rate" value="1" v-model="ratings" disabled/>
+	                                    <label for="1-star" class="star">★</label>
+	                                </div>
+                                </div>
+                                <div class="writeReview">
+									<div id="profileAndName">
+										<img id="profileImage" th:if="${user.image == null}" th:src="@{/img/defaultProfileImage.png}" width="50px" height="50px" alt="프로필 사진">
+										<img id="profileImage" th:unless="${user.image == null}" th:src="@{/user/image(id=${user.id})}" width="50px" height="50px" alt="프로필 사진">
+										<label id="nickname">[[${user.nickname}]]</label>
+									</div>
+									<textarea th:if="${reviewable} == true" cols="150" rows="10" name="comment" placeholder="리뷰 작성" required></textarea>
+	                                <textarea th:unless="${reviewable} == true" cols="150" rows="10" name="comment" placeholder="해당 클래스를 예약하지 않았으므로 리뷰 작성 불가" disabled></textarea>
+	                                <form method="post" action="" enctype="multipart/form-data">
+					                    <input th:if="${reviewable} == true" type="file" id="file" name="file" accept="image/*" onchange="previewImage(this)"><br>
+					                    <div id="imageContainer"></div>
+					                    <img id="imagePreview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+					                </form>
+					                <form method="post" action="" enctype="multipart/form-data">
+					                    <input th:unless="${reviewable} == true" type="file" id="file" name="file" accept="image/*" onchange="previewImage(this)" disabled><br>
+					                    <div id="imageContainer"></div>
+					                    <img id="imagePreview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+					                </form>
+	                                <input th:if="${reviewable} == true" type="submit" value="리뷰 등록" class="btn btn-outline-dark">
+	                                <input th:unless="${reviewable} == true" type="submit" value="리뷰 등록" class="btn btn-outline-dark" disabled>
+								</div>
+                            </td>
+                        </tr>
+                        <tr>	
+                            <td colspan="3">
+                                <div th:if="${#strings.isEmpty(reviewListOrderByRateAsc)}">
+                                    <p>해당 클래스의 리뷰가 존재하지 않습니다.</p>
+                                </div>
+                                <div th:unless="${#strings.isEmpty(reviewListOrderByRateAsc)}">
+									<hr><br>
+									<strong>★ 만족도 ([[${#lists.size(reviewListOrderByRateAsc)}]])</strong>
+									<div class="between">
+					                	<div class="stars" th:data-rating="${oneday.averageRate}">
+									        <div class="st">
+										        <div class="star-fill space-x-2 text-lg" id="rate-fill">
+										            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+										        </div>
+										        <div class="star-base space-x-2 text-lg" id="rate-base">
+										            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+										        </div>
+									        </div>
+										</div>
+										<span class="average-rate">[[${oneday.averageRate}]]</span>
+									</div>
+									<div id="aligns">
+										<a id="align" th:href="@{/review/sort/rateDesc(onedayId=${onedayId})}">별점높은순</a>
+										<a id="align" th:href="@{/review/sort/rateAsc(onedayId=${onedayId})}">별점낮은순</a>
+										<a id="align" th:href="@{/review/sort/dateDesc(onedayId=${onedayId})}">최신순</a>
+										<a id="align" th:href="@{/review/sort/dateAsc(onedayId=${onedayId})}">오래된순</a>
+									</div>							
+								    <div th:each="review:${reviewListOrderByRateAsc}">
+										<hr>
+										<img id="profileImage" th:if="${review.user.image == null}" th:src="@{/img/defaultProfileImage.png}" width="40px" height="40px" alt="프로필 사진">
+										<img id="profileImage" th:unless="${review.user.image == null}" th:src="@{/user/image(id=${review.user.id})}" width="40px" height="40px" alt="프로필 사진">
+								        <label><a id="reviewNickname" th:href="@{@{/board/myreview(username=${review.user.username})}}">[[${review.user.nickname}]]</a></label>
+								        <label>
+									        <div class="star-ratings" th:data-rating="${review.rate}">
+									            <div class="star-ratings-fill space-x-2 text-lg" id="rating">
+									                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+									            </div>
+									            <div class="star-ratings-base space-x-2 text-lg" id="rating">
+									                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+									            </div>
+									        </div>
+								        </label>
+								        <label>[[${#temporals.format(review.date, 'yyyy-MM-dd HH:mm:ss')}]]</label>
+								        <a id="updateReview" class="update" th:if="${#authentication.getPrincipal().getUsername() == review.user.username}" 
+                                 			th:href="@{/review/update(reviewId=${review.id})}">수정</a> 
+                                 		<a class="delete" th:if="${#authentication.getPrincipal().getUsername() == review.user.username ||
+                                 			#authentication.getPrincipal().getUsername().equals('admin')}" onclick="return confirm('정말로 삭제하시겠습니까?')"
+                                 			th:href="@{/review/remove(reviewId=${review.id})}">삭제</a><br>
+								        <br th:if="${review.image != null}">
+								        <img th:if="${review.image != null}" th:src="@{/review/image(id=${review.id})}" style="max-width: 100%; max-height: 200px;" alt="리뷰 이미지"><br>
+								        <br th:if="${review.image != null}">
+								        <p>[[${review.comment}]]</p>
+								    </div>
+								</div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div th:replace="@{/fragments/footer}"></div>
+   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5fc7f374862dc128b6fe3d8cb71f56e&libraries=services"></script>
+   <script>
+   var mapContainer = document.getElementById('map'),
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3,
+            draggable: false // 맵 드래깅 비활성화
+        };
+    
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    // 사용자가 입력한 주소를 가져와서 지도에 표시
+    var userAddress = "[[${oneday.location}]]"; // Thymeleaf 문법을 사용하여 주소를 가져옴
+    geocoder.addressSearch(userAddress, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 마커 표시
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+                
+            });
+
+            // 인포윈도우 표시
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">위치</div>'
+            });
+            infowindow.open(map, marker);
+
+            // 지도의 중심을 결과값으로 받은 위치로 이동
+            map.setCenter(coords);
+        }
+    });
+    </script>
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>    
+	<script type="text/javascript" src="/js/detail.js"></script>
+	<script type="text/javascript" src="/js/writeClass.js"></script>
+</body>
+</html>

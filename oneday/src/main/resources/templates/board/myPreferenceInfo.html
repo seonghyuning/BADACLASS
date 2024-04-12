@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 취향 정보</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+    <div th:replace="@{/fragments/header}"></div>
+    <div align="center" th:if="${mostReservedCategory == null}">
+		<br>
+	    <p>[[${user.nickname}]]님이 예약하신 클래스가 없으므로</p>
+	    <p>나의 취향 정보 파악이 불가능합니다.</p>
+    </div>
+    <div align="center" th:unless="${mostReservedCategory == null}">
+		<br>
+        <h4>[[${user.nickname}]]님이 가장 많이 예약하신 카테고리는</h4>
+        <h3><strong>[[${mostReservedCategory.name}]]</strong> 입니다.</h3><br>
+    </div>
+    <div class="class-container" th:if="${mostReservedCategory != null}">
+        <div th:if="${not #lists.isEmpty(recommendationOnedayList)}" class="class-list">
+            <div class="class-item" th:each="oneday, status : ${recommendationOnedayList}">
+				<a th:href="@{/board/detail/{onedayId}(onedayId=${oneday.id})}">
+					<div class="img">
+						<img th:src="@{/oneday/image(id=${oneday.id})}" alt="${oneday.name}">
+					</div>
+                    <span id="wishlist">
+                        <p th:text="${oneday.category.name}" id="category"></p>
+                        <div class="wrapper">
+                            <!-- 아이콘에 필요한 데이터를 data 속성으로 추가 -->
+                            <div class="icon-wishlist"
+                                data-th-onedayid="${oneday.id}"
+                                th:class="${wishedStatusList[__${status.index}__]} ? 'icon-wishlist in-wishlist' : 'icon-wishlist'">
+                            </div>
+                            <!-- hidden input 추가 -->
+                            <input type="hidden" th:value="${oneday.id}" id="onedayId" />
+                        </div>
+                    </span>
+                    <p th:text="${oneday.name}" id="title"></p>
+                    <div class="location">
+						<p id="location"><img th:src="@{/img/marker.svg}"> [[${oneday.location}]]</p>
+					</div>
+                    
+				    <div class="between">
+					    <div class="star-ratings" th:data-rating="${oneday.averageRate}">
+							<div class="star">
+						        <div class="star-ratings-fill space-x-2 text-lg" id="rating-fill">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+						        <div class="star-ratings-base space-x-2 text-lg" id="rating-base">
+						            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+						        </div>
+					        </div>
+					    </div>
+					    <span class="average-rate">[[${oneday.averageRate}]]</span>
+				    </div>
+			    </a>
+            </div>
+        </div>
+    </div>
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
+	<script type="text/javascript" src="/js/wishlist.js"></script>
+</body>
+</html>

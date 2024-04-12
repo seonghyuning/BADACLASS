@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>관리자 가입 승인</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/question_list.css}" />
+</head>
+<body>
+    <div class="body-container">
+	    <div class="body-box">
+			<div class="body-menu">
+				<div class="logo-img"><a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a></div><br>
+				<div class="menu"><img class="icon" th:src="@{/img/home.svg}"><a th:href="@{/main}">HOME</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/admin.svg}"><a th:href="@{/auth/approval}">관리자 가입 승인</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/people.svg}"><a th:href="@{/auth/management}">전체 회원 관리</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/open.svg}"><a th:href="@{/board/myclassAdmin}">나의 오픈 클래스</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/reservation.svg}"><a th:href="@{/board/myclassUser}">내가 신청한 클래스</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/question2.svg}"><a th:href="@{/question/register}">문의글 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/question.svg}"><a th:href="@{/question/list}">내가 작성한 문의</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/review.svg}"><a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}">내 리뷰 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/user.svg}"><a th:href="@{/auth/updateProfile}">내 정보 수정</a></div>
+			</div>	
+			<div class="table-container">
+				<div class="user">
+					<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+					    	[[${user.nickname}]]님
+					    </a>
+						<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<li><a class="dropdown-item" th:href="@{/question/form}">문의글 작성</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+							<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+						</ul>
+				        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+					        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+					        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+				        </ul>
+					</div>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+		        </div>
+				<div class="table-box">
+				    <h3>관리자 가입 승인</h3>
+				    <form name="approvalForm" method="post" action="">
+				        <table>
+				            <thead>
+				                <tr>
+				                    <th>번호</th>
+				                    <th>이름</th>
+				                    <th>ID</th>
+				                    <th>휴대폰 번호</th>
+				                    <th>이메일</th>
+				                    <th>성별</th>
+				                    <th>생년월일</th>
+				                    <th>가입날짜</th>
+				                    <th>승인</th>
+				                </tr>
+				            </thead>
+				            <tbody th:if="${#strings.isEmpty(waitingForAdminApprovalList)}">
+				                <tr>
+					                <td>
+					                    <p>
+					                        <b><span style="font-size: 9pt">관리자 가입 승인을 요청하는 회원이 없습니다.</span></b>
+					                    </p>
+					                </td>
+				            	</tr>
+				            </tbody>
+				            <tbody th:unless="${#strings.isEmpty(waitingForAdminApprovalList)}">
+				                <tr th:each="watingforAdminApproval:${waitingForAdminApprovalList}">
+				                    <!-- 내장된 변수 userStat.count -->
+				                    <!-- thymeleaf에서 변수를 사용할 때는 []로 묶어줘야 함 -->
+				                    <td th:text="${watingforAdminApprovalStat.count}"></td>
+				                    <td th:text="${watingforAdminApproval.user.nickname}"></td>
+				                    <td th:text="${watingforAdminApproval.user.username}"></td>
+				                    <td th:text="${watingforAdminApproval.user.phoneNm}"></td>
+				                    <td th:text="${watingforAdminApproval.user.email}"></td>
+				                    <td th:text="${watingforAdminApproval.user.gender}"></td>
+				                    <td th:text="${watingforAdminApproval.user.year}"></td>
+				                    <td th:text="${#temporals.format(watingforAdminApproval.user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+				                    <td>
+										<label th:unless="${watingforAdminApproval.approval == false}">승인 완료</label>
+										<form th:action="@{/auth/approval}" method="post">
+					        				<input type="hidden" name="username" th:value="${watingforAdminApproval.user.username}" />
+					        				<button th:if="${watingforAdminApproval.approval == false}" id="approvalBtn" type="submit" class="btn btn-outline-dark" onclick="return confirm('해당 회원을 관리자로 승인하겠습니까?')">승인</button>
+				    					</form>
+				    				</td>
+				                </tr>
+				            </tbody>
+				        </table>
+				    </form>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div th:replace="@{/fragments/footer}"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/category.js"></script>
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

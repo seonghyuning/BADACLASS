@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>원데이 클래스</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+    <div th:replace="@{/fragments/header}"></div>
+    <div class="body">
+		<div class="menu">
+			<a type="button" id="nearbyClassesBtn"><div class="near-box"><div class="naerimg"><img th:src="@{/img/location-search.png}"></div><div class="naerimg"><h2>내 주변 클래스</h2><p>내 주변에 있는 클래스 찾기</p></div></div></a>
+            <a type="button" id="regionBtn"><div class="near-box"><div class="naerimg"><img th:src="@{/img/region.png}"></div><div class="naerimg"><h2>지역</h2><p>지역별 클래스 둘러보기</p></div></div></a>
+            <a type="button" id="categoryBtn"><div class="near-box"><div class="naerimg"><img th:src="@{/img/category.png}"></div><div class="naerimg"><h2>카테고리</h2><p>카테고리별 다양한 클래스</p></div></div></a>
+            <a type="button" id="groupReservationBtn" th:href="@{/group}"><div class="near-box"><div class="naerimg"><img th:src="@{/img/people.png}"></div><div class="naerimg"><h2>단체클래스 예약</h2><p>더블데이트·공방체험</p></div></div></a>
+        </div>
+        <div class="region-container" style="display: none;">
+			<div class="none-box">
+			    <form th:action="@{/searchLocation/city}" method="get">
+			        <th:block th:each="city : ${cities}">
+			            <input type="submit" class="btn111" th:value="${city}" th:name="city" />
+			        </th:block>
+			    </form>
+			</div>
+		</div>
+        <div class="category-container" style="display: none;">
+			<div class="none-box">
+				<a th:href="@{/category}" class="btn112">전체</a>
+	        	<a th:each="ctg:${categoryList}" th:href="@{/category(page=${ctg.id})}" class="btn112">[[${ctg.name}]]</a>
+			</div>
+	    </div>
+        <br>
+        <div class="class-container">
+            <div th:if="${not #lists.isEmpty(onedayList)}" class="class-list">
+                <div class="class-item" th:each="oneday, status : ${onedayList}">
+					<a th:href="@{/board/detail/{onedayId}(onedayId=${oneday.id})}">
+						<div class="img">
+							<img th:src="@{/oneday/image(id=${oneday.id})}" alt="${oneday.name}">
+						</div>
+	                    <span id="wishlist">
+	                        <p th:text="${oneday.category.name}" id="category"></p>
+	                        <div class="wrapper">
+	                            <!-- 아이콘에 필요한 데이터를 data 속성으로 추가 -->
+	                            <div class="icon-wishlist"
+	                                data-th-onedayid="${oneday.id}"
+	                                th:class="${wishedStatusList[__${status.index}__]} ? 'icon-wishlist in-wishlist' : 'icon-wishlist'">
+	                            </div>
+	                            <!-- hidden input 추가 -->
+	                            <input type="hidden" th:value="${oneday.id}" id="onedayId" />
+	                        </div>
+	                    </span>
+	                    <p th:text="${oneday.name}" id="title"></p>
+	                    <div class="location">
+							<p id="location"><img th:src="@{/img/marker.svg}"> [[${oneday.location}]]</p>
+						</div>
+	                    
+					    <div class="between">
+						    <div class="star-ratings" th:data-rating="${oneday.averageRate}">
+								<div class="star">
+							        <div class="star-ratings-fill space-x-2 text-lg" id="rating-fill">
+							            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							        </div>
+							        <div class="star-ratings-base space-x-2 text-lg" id="rating-base">
+							            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+							        </div>
+						        </div>
+						    </div>
+						    <span class="average-rate">[[${oneday.averageRate}]]</span>
+					    </div>
+				    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="message-container" id="messageContainer">
+        <p id="messageText"></p>
+        <button class="btn btn-primary" id="closeButton">닫기</button>
+        <a th:href="@{/wishlist/list}" class="btn btn-success" id="wishlistButton">위시리스트로 이동</a>
+    </div>
+  	<div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
+	<script type="text/javascript" src="/js/wishlist.js"></script>
+	<script type="text/javascript" src="/js/mylocation.js"></script>
+</body>
+</html>

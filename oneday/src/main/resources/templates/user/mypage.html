@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>my Page</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}" />
+</head>
+<body>
+    <div th:replace="@{/fragments/header}"></div>
+    <div class="body">
+		<h5 align="center"><img th:src="@{/img/profile.svg}" width="3%" height="3%" />프로필</h5>
+	    <div class="box">
+			<div class="myprofile">
+				<img id="profileImage" th:if="${user.image == null}" th:src="@{/img/defaultProfileImage.png}" width="100px" height="100px" alt="프로필 사진">
+				<img id="profileImage" th:unless="${user.image == null}" th:src="@{/user/image(id=${user.id})}" width="100px" height="100px" alt="프로필 사진"><br><br>
+				<p>안녕하세요 [[${user.nickname}]]님</p>
+		        <p>이메일</p>
+		        <input type="text" name="email" th:value="${user.email}">
+		        <p>전화번호</p>
+		        <input type="text" name="phoneNm" th:value="${user.phoneNm}"><br>
+		        <br>
+			    <a th:href="@{/auth/updateProfile}" class="btn btn-outline-dark">프로필 수정</a>
+			    <a th:href="@{/auth/resetPw}" class="btn btn-outline-dark">비밀번호 변경</a>
+			</div>
+			<div class="link">
+				<div class="link-list">
+					<a th:href="@{/board/myPreferenceInfo}" type="button" class="my">
+						<img src="/img/like.svg" class="icon"><br>
+    					<span>나의 취향 정보</span>
+					</a>
+					<a th:href="@{/wishlist/list}" type="button" class="my">
+						<img src="/img/heart.svg" class="icon"><br>
+						<span>위시리스트</span>
+					</a>
+			        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/board/myclassAdmin}" type="button" class="my">
+						<img src="/img/open.svg" class="icon"><br>
+						<span>나의 오픈클래스</span>
+					</a>
+			        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/question/register}" type="button" class="my">
+						<img src="/img/question.svg" class="icon"><br>
+						<span>문의 글 관리</span>
+					</a>
+					<a th:href="@{/board/myclassUser}" type="button" class="my">
+						<img src="/img/reservation.svg" class="icon"><br>
+						<span>내가 신청한 클래스</span>
+					</a>
+			        <a th:href="@{/question/list}" type="button" class="my">
+						<img src="/img/question.svg" class="icon"><br>
+						<span>내가 작성한 문의</span>
+					</a>
+					<a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}" type="button" class="my">
+						<img src="/img/review.svg" class="icon"><br>
+						<span>내가 작성한 리뷰</span>
+					</a>
+					<a th:href="@{/auth/delete}" type="button" class="my">
+						<img src="/img/delete.svg" class="icon"><br>
+						<span>회원 탈퇴하기</span>
+					</a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+    <div th:replace="@{/fragments/footer}"></div>
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
+</body>
+</html>

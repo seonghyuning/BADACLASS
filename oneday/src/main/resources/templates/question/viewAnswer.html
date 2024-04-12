@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 내용 상세보기</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/question_list.css}" />
+</head>
+<body>
+    <div class="body-container">
+	    <div class="body-box">
+			<div class="body-menu">
+				<div class="logo-img"><a id="logo" th:href="@{/main}"><img th:src="@{/img/logo2.png}"></a></div><br>
+				<div class="menu"><img class="icon" th:src="@{/img/home.svg}"><a th:href="@{/main}">HOME</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/admin.svg}"><a th:href="@{/auth/approval}">관리자 가입 승인</a></div>
+				<div class="menu" th:if="${#authentication.getPrincipal().getUsername().equals('admin')}"><img class="icon" th:src="@{/img/people.svg}"><a th:href="@{/auth/management}">전체 회원 관리</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/open.svg}"><a th:href="@{/board/myclassAdmin}">나의 오픈 클래스</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/reservation.svg}"><a th:href="@{/board/myclassUser}">내가 신청한 클래스</a></div>
+				<div class="menu" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><img class="icon" th:src="@{/img/question2.svg}"><a th:href="@{/question/register}">문의글 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/question.svg}"><a th:href="@{/question/list}">내가 작성한 문의</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/review.svg}"><a th:href="@{/board/myreview(username=${#authentication.getPrincipal().getUsername()})}">내 리뷰 관리</a></div>
+				<div class="menu"><img class="icon" th:src="@{/img/user.svg}"><a th:href="@{/auth/updateProfile}">내 정보 수정</a></div>
+			</div>	
+			<div class="table-container">
+				<div class="user">
+					<div class="dropdown" sec:authorize="isAuthenticated()" th:if="${user}">
+						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+					    	[[${user.nickname}]]님
+					    </a>
+						<ul th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+							<li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+						</ul>
+				        <ul th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					        <li><a class="dropdown-item" th:href="@{/board/myclassAdmin}">나의 오픈클래스</a></li>
+					        <li><a class="dropdown-item" th:href="@{/question/register}">문의글 관리</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/approval}">관리자 가입 승인</a></li>
+					        <li><a th:if="${#authentication.getPrincipal().getUsername().equals('admin')}" class="dropdown-item" th:href="@{/auth/management}">전체 회원 관리</a></li>
+							<li><a class="dropdown-item" th:href="@{/auth/mypage}">my Page</a></li>
+					        <li><a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
+				        </ul>
+					</div>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
+		            <a id="atag" sec:authorize="isAnonymous()" th:href="@{/auth/join}">회원가입</a>
+		        </div>
+				<div class="table-box">
+					<h4>[[${question.oneday.name}]]</h4><br>
+				    <table class="answer">
+				        <tr class="answer">
+				            <td class="answer">작성자: [[${question.user.nickname}]]</td>
+				            <td class="day">[[${#temporals.format(question.question_date, 'yyyy-MM-dd')}]]</td>
+				        </tr>
+				        <tr class="answer">
+				            <td class="answer">
+				                <label>제목: </label>
+				                <input type="text" id="question_title" th:value="${question.question_title}" disabled>
+				            </td> 
+				        </tr>
+				        <tr class="answer">
+				            <td class="answer">
+				                <textarea class="answer" th:text="${question.question_content}" disabled/>
+				            </td>
+				        </tr>
+				        <tr class="answer">
+				            <td class="answer">
+				                <textarea class="answer" th:text="${question.answer}" disabled/>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td align="center">
+				                <a th:href="@{/question/list}" class="btn btn-outline-dark">목록보기</a>
+				            </td>
+				        </tr>
+				    </table>
+				</div>
+			</div>	
+		</div>
+	</div>
+    <div th:replace="@{/fragments/footer}"></div>
+    <script type="text/javascript" src="/js/category.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>

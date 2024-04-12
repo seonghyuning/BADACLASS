@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>클래스 수정</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/writeClass.css}" />
+</head>
+<body>
+	<div th:replace="@{/fragments/header}"></div>
+	<div class="write-box"><br>
+	    <h2 align="center">클래스 수정</h2><br>
+	    <form name="classForm" method="post" th:action="@{/board/update}" enctype="multipart/form-data">
+			<div class="write-wrapper">
+				<div th:each="od:${oneday}"> 
+		            <input type="text" name="name" th:value="${od.name}" id="class_name" placeholder="클래스 제목" align="center" required>
+					<div class="box">
+						<div class="adress">
+							<input type="text" id="sample6_postcode" name="sample6_postcode" placeholder="우편번호">
+							<input type="button" onclick="adressInfo()" value="우편번호 찾기" class="btn btn-outline-dark"><br>
+							<input type="text" id="sample6_address" name="sample6_address" th:value="${od.location}" placeholder="주소" required><br>
+							<input type="text" id="sample6_detailAddress" name="sample6_detailAddress" placeholder="상세주소">
+							<input type="text" id="sample6_extraAddress" name="sample6_extraAddress" placeholder="참고항목">
+						</div>
+						<div class="category">
+							<p>카테고리</p>
+							<select name="categoryCode" align="center">
+							    <option th:each="category: ${categoryList}" th:value="${category.id}" 
+				                th:selected="${od.category.id == categoryStat.count}" th:text="${category.name}"></option>
+							</select>
+				            <button type="button" onclick="addCategory()" class="btn btn-outline-dark">카테고리 추가</button><br>
+				            <div id="categoryContainer"></div>
+						</div>        
+			        </div>
+			        <p id="ptag">최대 예약 가능 인원 수</p>
+					<div class="availableCounts">
+						<input type="number" id="availableSlots" name="availableSlots" th:value="${od.availableSlots}" required><br>
+					</div>
+		            <p id="ptag">이미지 등록</p>
+		            <div class="image">
+						<div class="container">
+		                    <div class="image-upload" id="image-upload">
+		                        <form method="post" action="" enctype="multipart/form-data">
+		                            <input type="file" id="file" name="file" accept="image/*" onchange="previewImage(this)"><br><br>
+		                            <div id="imageContainer"></div>
+		                            <p>▼ 현재 이미지</p>
+		                            <img th:src="@{/oneday/image(id=${od.id})}" alt="${od.name}"><br><br>
+		                            <p>▼ 교체할 이미지</p>
+		                            <img id="imagePreview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+		                        </form>
+		                    </div>
+		                </div>
+					</div>
+		            <div class="text">
+						<p>클래스 정보</p>
+						<textarea name="content" th:value="${od.content}" id="information" required>[[${od.content}]]</textarea>
+						<p>커리큘럼</p>
+			            <textarea name="curri" th:value="${od.curri}" id="curriculum" required>[[${od.curri}]]</textarea>
+					</div>
+		            <div align="center">
+		                <input type="hidden" name="onedayId" th:value="${od.id}">
+		                <input type="submit" value="수정완료" class="btn btn-outline-dark">
+		                <a th:href="@{/board/myclassAdmin}" class="btn btn-outline-dark">목록보기</a>
+		            </div>
+		        </div> 
+			</div>
+	        
+	    </form>
+	</div>
+	<div th:replace="@{/fragments/footer}"></div>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/category.js"></script>
+    <script type="text/javascript" src="/js/writeClass.js"></script>
+</body>
+</html>

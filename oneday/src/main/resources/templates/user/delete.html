@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴</title>
+    <link rel="stylesheet" th:href="@{/css/join.css}" />
+</head>
+<body>
+	<div class="join-wrapper">
+		<div class="container">
+			<h2>회원 탈퇴</h2><br>
+		    <form th:action="@{/auth/delete}" th:if="${username}" method="post" id="join-form">
+				<!-- 회원 정보가 일치하지 않으면 에러 메시지 출력 -->
+				<div th:if="${error}" align="center">
+					<p th:text="${error}"></p>
+				</div>
+                <label for="nickname">* 이름<br>
+					<input type="text" id="nickname" name="nickname" required><br><br>
+				</label>
+                <label for="username">* ID<br>
+					<input type="text" id="username" name="username" th:value="${username}" disabled><br><br>
+                </label>
+				<label for="email">* Email<br>
+					<input type="email" id="email" name="email" placeholder="1234@naver.com" required><br><br>
+		        </label>
+                <label for="phoneNm">* 휴대폰 번호<br>
+					<input type="text" id="phoneNm" name="phoneNm" placeholder="01012341234" required><br><br>
+				</label>
+				<br>
+		        <div class="btn">
+	            	<button type="submit">탈퇴 완료</button>
+		        	<button type="button" id="goBackButton">이전으로</button>
+	        	</div>
+		    </form>
+		</div>
+	</div>
+	<script type="text/javascript" src="/js/goBack.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" th:href="@{/css/join.css}" />
+</head>
+<body>
+	<div class="join-wrapper">
+		<div class="container">			
+			<div><h2>회원가입을 위해<br>정보를 입력해주세요.</h2></div>
+		    <form th:action="@{/auth/join}" th:object="${userCreateForm}" method="post" id="join-form">
+		        <div th:if="${#fields.hasAnyErrors()}" align="center"> 
+		            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+		        </div>
+		        <label for="nickname">이름<br>
+					<input type="text" id="nickname" th:field="*{nickname}" required>
+				</label>
+				
+				<label for="username">ID<br>
+					<input type="text" class="ID" id="username" th:field="*{username}" required>
+				</label>
+				<label for="password1">비밀번호<br>
+					<input type="password" id="password1" th:field="*{password1}" required>
+				</label>
+				<label for="password2">비밀번호 확인<br>
+					<input type="password" id="password2" th:field="*{password2}" required>
+				</label>
+				<span>
+					<label for="gender">성별<br>
+						<input type="radio" class="radio" th:field="*{gender}" th:value="남" th:text="남성" required>
+						<input type="radio" class="radio" th:field="*{gender}" th:value="여" th:text="여성" required><br>
+					</label>
+				</span>
+				<label for="year">생년월일<br>
+					<input type="text" id="year" th:field="*{year}" placeholder="20230101" required>
+				</label>
+				<label for="phoneNm">휴대폰 번호<br>
+					<input type="text" id="phoneNm" th:field="*{phoneNm}" placeholder="01012341234" required>
+				</label>
+				<label for="email">Email<br>
+					<input type="email" id="email" th:field="*{email}" placeholder="1234@naver.com" required>
+		        </label>
+				<span>
+					<label for="role">회원유형<br>
+						<input type="radio" class="radio" th:field="*{role}" th:value="관리자" required>관리자
+			        	<input type="radio" class="radio" th:field="*{role}" th:value="회원" required>회원
+					</label>
+				</span>
+				<br>
+		        <button type="submit">회원가입</button>
+		        <div class="find">
+		        	<a th:href="@{/auth/login}">이미 아이디가 있으신가요? <strong>로그인</strong></a>
+		        </div>
+		    </form>
+		</div>
+	</div>
+</body>
+</html>

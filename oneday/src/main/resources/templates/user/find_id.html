@@ -1,0 +1,26 @@
+<!-- find_id.html (ID 찾기 입력 화면) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ID 찾기</title>
+    <link rel="stylesheet" th:href="@{/css/find.css}" />
+</head>
+<body>
+	<div class="find-box">
+		<div class="find-wrapper">
+			<h2>아이디 찾기</h2>
+			<form action="/auth/findId" method="post" id="findId-form">
+		        <input type="nickname" id="nickname" name="nickname" placeholder="사용자 이름" required>
+		        <input type="email" id="email" name="email" placeholder="등록한 이메일" required>
+		        <button type="submit">ID 찾기</button>
+    		</form>
+			<div class="additional-links">
+                <a th:href="@{/auth/join}">회원가입</a>
+                <a th:href="@{/auth/login}">로그인</a>
+            </div>
+		</div>
+	</div> 
+	<script th:src="@{/js/errorPupup.js}" defer="defer"></script>
+</body>
+</html>

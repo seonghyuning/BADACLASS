@@ -1,0 +1,17 @@
+#question_title {
+	width: 87%;
+}
+
+textarea {
+	width: 95%;
+	height: 400px;
+}
+
+.button {
+	display: flex;
+	justify-content: right;
+	margin-right: 5%;
+}
+h3{
+	margin-bottom: 20px;
+}
